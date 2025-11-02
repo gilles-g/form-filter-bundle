@@ -116,19 +116,22 @@ abstract class ExpressionBuilder
             return;
         }
 
-        $min = $this->convertToSqlDate($min);
-        $max = $this->convertToSqlDate($max, true);
+        // Performance: Convert dates only when needed to avoid unnecessary operations
         if (null === $min) {
             // $max exists
+            $max = $this->convertToSqlDate($max, true);
             return $this->expr()->lte($field, $max);
         }
 
         if (null === $max) {
             // $min exists
+            $min = $this->convertToSqlDate($min);
             return $this->expr()->gte($field, $min);
         }
 
         // both $min and $max exists
+        $min = $this->convertToSqlDate($min);
+        $max = $this->convertToSqlDate($max, true);
         return $this->expr()->andX(
             $this->expr()->lte($field, $max),
             $this->expr()->gte($field, $min)
@@ -151,26 +154,27 @@ abstract class ExpressionBuilder
             return null;
         }
 
+        // Performance: Convert dates only when needed to avoid unnecessary operations
         $value = $this->convertToSqlDateTime($value);
+        
+        if ($min === null) {
+            $max = $this->convertToSqlDateTime($max);
+            return $this->expr()->lte($value, $max);
+        }
+        
+        if ($max === null) {
+            $min = $this->convertToSqlDateTime($min);
+            return $this->expr()->gte($value, $min);
+        }
+        
+        // Both min and max exist
         $min = $this->convertToSqlDateTime($min);
         $max = $this->convertToSqlDateTime($max);
-
-        if (!$max && !$min) {
-            return null;
-        }
-
-        if ($min === null) {
-            $findExpression = $this->expr()->lte($value, $max);
-        } elseif ($max === null) {
-            $findExpression = $this->expr()->gte($value, $min);
-        } else {
-            $findExpression = $this->expr()->andX(
-                $this->expr()->lte($value, $max),
-                $this->expr()->gte($value, $min)
-            );
-        }
-
-        return $findExpression;
+        
+        return $this->expr()->andX(
+            $this->expr()->lte($value, $max),
+            $this->expr()->gte($value, $min)
+        );
     }
 
     /**

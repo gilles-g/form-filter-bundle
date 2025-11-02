@@ -65,7 +65,8 @@ final class DoctrineApplyFilterListener
 
     private function computeExpression(QueryBuilder $queryBuilder, ConditionNodeInterface $node): null|Andx|Orx
     {
-        if (count($node->getFields()) == 0 && count($node->getChildren()) == 0) {
+        // Performance: Use empty() instead of count() for checking empty arrays
+        if (empty($node->getFields()) && empty($node->getChildren())) {
             return null;
         }
 
@@ -76,7 +77,8 @@ final class DoctrineApplyFilterListener
                 /** @var ConditionInterface $condition */
                 $expression->add($condition->getExpression());
 
-                $this->parameters = array_merge($this->parameters, $condition->getParameters());
+                // Performance: Use array union instead of array_merge to avoid creating new array
+                $this->parameters += $condition->getParameters();
             }
         }
 

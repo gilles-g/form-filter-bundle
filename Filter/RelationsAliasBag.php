@@ -29,7 +29,7 @@ class RelationsAliasBag
      */
     public function get($relation)
     {
-        return $this->aliases[$relation];
+        return $this->aliases[$relation] ?? null;
     }
 
     /**
@@ -46,7 +46,7 @@ class RelationsAliasBag
      */
     public function has($relation): bool
     {
-        return isset($this->aliases[$relation]);
+        return array_key_exists($relation, $this->aliases);
     }
 
     public function count(): int

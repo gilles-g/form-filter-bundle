@@ -178,7 +178,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
         $condition = null;
 
         // build a complete form name including parents
-        $completeName = $form->getName();
+        // Performance: Build path in array and join once instead of repeated concatenation
+        $nameParts = [$form->getName()];
         $parentForm = $form;
         do {
             $parentForm = $parentForm->getParent();
@@ -187,9 +188,11 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
                 && $parentForm->getConfig()->getMapped()
                 && !$parentForm->getConfig()->getInheritData()
             ) { // skip collection numeric index and not mapped fields and inherited data
-                $completeName = $parentForm->getName() . '.' . $completeName;
+                array_unshift($nameParts, $parentForm->getName());
             }
         } while (!$parentForm->isRoot());
+        
+        $completeName = implode('.', $nameParts);
 
         // apply the filter by using the closure set with the 'apply_filter' option
         $callable = $form->getConfig()->getAttribute('apply_filter');

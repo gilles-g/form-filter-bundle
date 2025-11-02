@@ -120,15 +120,13 @@ class ConditionNode implements ConditionNodeInterface
             return true;
         }
 
-        $i = 0;
-        $end = count($this->children);
-        $set = false;
-
-        while ($i < $end && !$set) {
-            $set = $this->children[$i]->setCondition($name, $condition);
-            $i++;
+        // Optimize child traversal with early return
+        foreach ($this->children as $child) {
+            if ($child->setCondition($name, $condition)) {
+                return true;
+            }
         }
 
-        return $set;
+        return false;
     }
 }
