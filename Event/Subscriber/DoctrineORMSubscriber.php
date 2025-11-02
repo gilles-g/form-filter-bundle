@@ -105,7 +105,8 @@ class DoctrineORMSubscriber extends AbstractDoctrineSubscriber implements EventS
                     $ids[] = $this->getEntityIdentifier($value, $queryBuilder->getEntityManager());
                 }
 
-                if (count($ids) > 0) {
+                // Performance: Use !empty() instead of count() > 0
+                if (!empty($ids)) {
                     $event->setCondition(
                         $expr->in($filterField, ':' . $paramName),
                         [$paramName => [$ids, \is_int($ids[0]) ? ArrayParameterType::INTEGER : ArrayParameterType::STRING]]

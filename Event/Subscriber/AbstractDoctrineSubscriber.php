@@ -38,7 +38,8 @@ abstract class AbstractDoctrineSubscriber
         if ('' !== $values['value'] && null !== $values['value']) {
             $paramName = $this->generateParameterName($event->getField());
 
-            if (is_array($values['value']) && sizeof($values['value']) > 0) {
+            // Performance: Use !empty() instead of sizeof() > 0
+            if (is_array($values['value']) && !empty($values['value'])) {
                 $parameterType = class_exists(ArrayParameterType::class) ? ArrayParameterType::STRING : Connection::PARAM_STR_ARRAY;
                 $event->setCondition(
                     $expr->in($event->getField(), ':' . $paramName),
@@ -143,7 +144,7 @@ abstract class AbstractDoctrineSubscriber
         $values = $event->getValues();
 
         if ('' !== $values['value'] && null !== $values['value']) {
-            $paramName = sprintf('p_%s', str_replace('.', '_', $event->getField()));
+            $paramName = $this->generateParameterName($event->getField());
 
             $op = empty($values['condition_operator']) ? FilterOperands::OPERATOR_EQUAL : $values['condition_operator'];
 
@@ -162,6 +163,9 @@ abstract class AbstractDoctrineSubscriber
 
         $expression = $expr->andX();
         $params = [];
+        
+        // Performance: Cache the parameter base name to avoid repeated str_replace calls
+        $paramBase = $this->generateParameterName($event->getField());
 
         if (isset($value['left_number'][0])) {
             $hasSelector = (FilterOperands::OPERAND_SELECTOR === $value['left_number']['condition_operator']);
@@ -175,7 +179,7 @@ abstract class AbstractDoctrineSubscriber
             }
 
             if (isset($leftValue, $leftCond)) {
-                $leftParamName = sprintf('p_%s_left', str_replace('.', '_', $event->getField()));
+                $leftParamName = $paramBase . '_left';
 
                 $expression->add($expr->$leftCond($event->getField(), ':' . $leftParamName));
                 $params[$leftParamName] = [$leftValue, is_int($leftValue) ? Types::INTEGER : Types::FLOAT];
@@ -194,7 +198,7 @@ abstract class AbstractDoctrineSubscriber
             }
 
             if (isset($rightValue, $rightCond)) {
-                $rightParamName = sprintf('p_%s_right', str_replace('.', '_', $event->getField()));
+                $rightParamName = $paramBase . '_right';
 
                 $expression->add($expr->$rightCond($event->getField(), ':' . $rightParamName));
                 $params[$rightParamName] = [$rightValue, is_int($rightValue) ? Types::INTEGER : Types::FLOAT];
