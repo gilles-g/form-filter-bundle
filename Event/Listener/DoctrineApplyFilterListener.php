@@ -77,8 +77,11 @@ final class DoctrineApplyFilterListener
                 /** @var ConditionInterface $condition */
                 $expression->add($condition->getExpression());
 
-                // Performance: Use array union instead of array_merge to avoid creating new array
-                $this->parameters += $condition->getParameters();
+                // Performance: Direct assignment instead of array_merge for better performance
+                // Parameters should have unique names based on field paths
+                foreach ($condition->getParameters() as $name => $value) {
+                    $this->parameters[$name] = $value;
+                }
             }
         }
 

@@ -116,22 +116,21 @@ abstract class ExpressionBuilder
             return;
         }
 
-        // Performance: Convert dates only when needed to avoid unnecessary operations
+        // Performance: Convert dates and check for null results to handle invalid dates
+        $min = $this->convertToSqlDate($min);
+        $max = $this->convertToSqlDate($max, true);
+        
         if (null === $min) {
             // $max exists
-            $max = $this->convertToSqlDate($max, true);
             return $this->expr()->lte($field, $max);
         }
 
         if (null === $max) {
             // $min exists
-            $min = $this->convertToSqlDate($min);
             return $this->expr()->gte($field, $min);
         }
 
         // both $min and $max exists
-        $min = $this->convertToSqlDate($min);
-        $max = $this->convertToSqlDate($max, true);
         return $this->expr()->andX(
             $this->expr()->lte($field, $max),
             $this->expr()->gte($field, $min)
@@ -154,22 +153,22 @@ abstract class ExpressionBuilder
             return null;
         }
 
-        // Performance: Convert dates only when needed to avoid unnecessary operations
+        // Performance: Convert dates and validate results
         $value = $this->convertToSqlDateTime($value);
-        
+        $min = $this->convertToSqlDateTime($min);
+        $max = $this->convertToSqlDateTime($max);
+
+        if (!$max && !$min) {
+            return null;
+        }
+
         if ($min === null) {
-            $max = $this->convertToSqlDateTime($max);
             return $this->expr()->lte($value, $max);
         }
         
         if ($max === null) {
-            $min = $this->convertToSqlDateTime($min);
             return $this->expr()->gte($value, $min);
         }
-        
-        // Both min and max exist
-        $min = $this->convertToSqlDateTime($min);
-        $max = $this->convertToSqlDateTime($max);
         
         return $this->expr()->andX(
             $this->expr()->lte($value, $max),
