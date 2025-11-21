@@ -182,41 +182,32 @@ HELP
 
     private function renderTemplate(string $namespace, string $className, array $fields, array $imports): string
     {
-        $code = "<?php\n\n";
-        $code .= "/*\n";
-        $code .= " * This file is part of the composer-write-changelogs project.\n";
-        $code .= " *\n";
-        $code .= " * (c) Dev Spiriit <dev@spiriit.com>\n";
-        $code .= " *\n";
-        $code .= " * For the full copyright and license information, please view the LICENSE\n";
-        $code .= " * file that was distributed with this source code.\n";
-        $code .= " */\n\n";
-        $code .= "namespace {$namespace};\n\n";
-
-        foreach ($imports as $import) {
-            $code .= "use {$import};\n";
+        $templatePath = __DIR__ . '/../Resources/skeleton/FormFilterType.tpl.php';
+        
+        if (!file_exists($templatePath)) {
+            throw new \RuntimeException(sprintf('Template file not found: %s', $templatePath));
         }
-
-        $code .= "\n";
-        $code .= "class {$className} extends AbstractType\n";
-        $code .= "{\n";
-        $code .= "    public function buildForm(FormBuilderInterface \$builder, array \$options): void\n";
-        $code .= "    {\n";
-
+        
+        // Prepare fields with target entity short names for template
+        $preparedFields = [];
         foreach ($fields as $fieldName => $fieldInfo) {
             if (is_array($fieldInfo)) {
-                $code .= "        \$builder->add('{$fieldName}', {$fieldInfo['type']}::class, [\n";
-                $code .= "            'class' => {$this->getShortClassName($fieldInfo['targetEntity'])}::class,\n";
-                $code .= "        ]);\n";
+                $preparedFields[$fieldName] = [
+                    'type' => $fieldInfo['type'],
+                    'target_entity_short' => $this->getShortClassName($fieldInfo['targetEntity'])
+                ];
             } else {
-                $code .= "        \$builder->add('{$fieldName}', {$fieldInfo}::class);\n";
+                $preparedFields[$fieldName] = $fieldInfo;
             }
         }
-
-        $code .= "    }\n";
-        $code .= "}\n";
-
-        return $code;
+        
+        // Extract variables for template
+        $class_name = $className;
+        $fields = $preparedFields;
+        
+        ob_start();
+        require $templatePath;
+        return ob_get_clean();
     }
 
     private function getFilterTypeForDoctrineType(string $doctrineType): string
