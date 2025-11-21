@@ -131,10 +131,10 @@ HELP
         $filterTypeNamespace = $this->getFilterTypeNamespace($entityClass);
 
         $fields = [];
-        $imports = [
-            'Spiriit\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType',
-            'Symfony\Component\Form\AbstractType',
-            'Symfony\Component\Form\FormBuilderInterface',
+        $importsMap = [
+            'Spiriit\Bundle\FormFilterBundle\Filter\Form\Type\TextFilterType' => true,
+            'Symfony\Component\Form\AbstractType' => true,
+            'Symfony\Component\Form\FormBuilderInterface' => true,
         ];
 
         // Pre-compute identifier fields for faster lookup
@@ -150,8 +150,8 @@ HELP
             $type = $fieldMapping['type'];
             $filterType = $this->getFilterTypeForDoctrineType($type);
             
-            if ($filterType !== 'TextFilterType' && !in_array('Spiriit\Bundle\FormFilterBundle\Filter\Form\Type\\' . $filterType, $imports)) {
-                $imports[] = 'Spiriit\Bundle\FormFilterBundle\Filter\Form\Type\\' . $filterType;
+            if ($filterType !== 'TextFilterType') {
+                $importsMap['Spiriit\Bundle\FormFilterBundle\Filter\Form\Type\\' . $filterType] = true;
             }
 
             $fields[$fieldName] = $filterType;
@@ -164,12 +164,8 @@ HELP
                 $entityFilterType = 'Spiriit\Bundle\FormFilterBundle\Filter\Form\Type\EntityFilterType';
                 $targetEntity = $associationMapping['targetEntity'];
                 
-                if (!in_array($entityFilterType, $imports)) {
-                    $imports[] = $entityFilterType;
-                }
-                if (!in_array($targetEntity, $imports)) {
-                    $imports[] = $targetEntity;
-                }
+                $importsMap[$entityFilterType] = true;
+                $importsMap[$targetEntity] = true;
                 
                 $fields[$fieldName] = [
                     'type' => 'EntityFilterType',
@@ -178,6 +174,7 @@ HELP
             }
         }
 
+        $imports = array_keys($importsMap);
         sort($imports);
 
         return $this->renderTemplate($filterTypeNamespace, $filterTypeClass, $fields, $imports);
