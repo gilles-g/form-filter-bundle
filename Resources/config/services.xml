@@ -41,5 +41,11 @@
         <service id="spiriit_form_filter.filter_prepare" class="%spiriit_form_filter.filter_prepare.class%" public="true">
             <tag name="kernel.event_listener" event="spiriit_filter.prepare" method="onFilterBuilderPrepare" />
         </service>
+
+        <!-- Console Commands -->
+        <service id="Spiriit\Bundle\FormFilterBundle\Command\GenerateFormFilterCommand">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <tag name="console.command" />
+        </service>
     </services>
 </container>
