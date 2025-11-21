@@ -32,6 +32,20 @@ The bundle can be installed using Composer or the [Symfony binary](https://symfo
 composer require spiriitlabs/form-filter-bundle
 ```
 
+## Quick Start
+
+### Generate a form filter automatically
+
+You can generate a form filter from an existing Doctrine entity using the CLI command:
+
+```bash
+php bin/console spiriit:form-filter:generate "App\Entity\YourEntity"
+```
+
+This will automatically create a filter type with appropriate field types based on your entity's properties. See the [Generate Form Filter Command documentation](Resources/doc/generate-command.md) for more details.
+
+### Or create a form filter manually
+
 ## Use it in two steps
 
 ### create a form
@@ -110,9 +124,10 @@ For installation and how to use the bundle refer to [Resources/doc/index.md](Res
     5. [Create your own filter type](Resources/doc/working-with-the-bundle.md#v-create-your-own-filter-type)
     6. [Enable validation on your filter type](Resources/doc/working-with-the-bundle.md#vi-enable-filtertype-form-validation)
 6. [The FilterTypeExtension](Resources/doc/filtertypeextension.md)
-7. [Working with other bundles](Resources/doc/working-with-other-bundles.md)
+7. [Generate Form Filter Command](Resources/doc/generate-command.md)
+8. [Working with other bundles](Resources/doc/working-with-other-bundles.md)
     1. [KNP Paginator example](Resources/doc/working-with-other-bundles.md#i-knp-paginator-example)
-8. [Real use case - Advanced usage with PagerFanta](Resources/doc/advanced-usage-with-pagerfanta-bundle.md)   
+9. [Real use case - Advanced usage with PagerFanta](Resources/doc/advanced-usage-with-pagerfanta-bundle.md)   
 
 Community Support
 -----------------
