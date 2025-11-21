@@ -137,17 +137,20 @@ HELP
             'Symfony\Component\Form\FormBuilderInterface',
         ];
 
+        // Pre-compute identifier fields for faster lookup
+        $identifierFields = array_flip($metadata->getIdentifierFieldNames());
+
         // Process fields
         foreach ($metadata->fieldMappings as $fieldName => $fieldMapping) {
             // Skip id fields
-            if (in_array($fieldName, $metadata->getIdentifierFieldNames())) {
+            if (isset($identifierFields[$fieldName])) {
                 continue;
             }
 
             $type = $fieldMapping['type'];
             $filterType = $this->getFilterTypeForDoctrineType($type);
             
-            if ($filterType !== 'TextFilterType') {
+            if ($filterType !== 'TextFilterType' && !in_array('Spiriit\Bundle\FormFilterBundle\Filter\Form\Type\\' . $filterType, $imports)) {
                 $imports[] = 'Spiriit\Bundle\FormFilterBundle\Filter\Form\Type\\' . $filterType;
             }
 
@@ -158,15 +161,23 @@ HELP
         foreach ($metadata->associationMappings as $fieldName => $associationMapping) {
             if ($associationMapping['type'] === ClassMetadata::MANY_TO_ONE || 
                 $associationMapping['type'] === ClassMetadata::ONE_TO_ONE) {
-                $imports[] = 'Spiriit\Bundle\FormFilterBundle\Filter\Form\Type\EntityFilterType';
+                $entityFilterType = 'Spiriit\Bundle\FormFilterBundle\Filter\Form\Type\EntityFilterType';
+                $targetEntity = $associationMapping['targetEntity'];
+                
+                if (!in_array($entityFilterType, $imports)) {
+                    $imports[] = $entityFilterType;
+                }
+                if (!in_array($targetEntity, $imports)) {
+                    $imports[] = $targetEntity;
+                }
+                
                 $fields[$fieldName] = [
                     'type' => 'EntityFilterType',
-                    'targetEntity' => $associationMapping['targetEntity']
+                    'targetEntity' => $targetEntity
                 ];
             }
         }
 
-        $imports = array_unique($imports);
         sort($imports);
 
         return $this->renderTemplate($filterTypeNamespace, $filterTypeClass, $fields, $imports);
