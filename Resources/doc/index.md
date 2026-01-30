@@ -15,3 +15,11 @@
 7. [Working with other bundles](working-with-other-bundles.md)
     1. [KNP Paginator example](working-with-other-bundles.md#i-knp-paginator-example)
 8. [Advanced usage with PagerFanta](advanced-usage-with-pagerfanta-bundle.md)
+9. [Attribute-Based Filters (PHP 8+)](attribute-based-filters.md) ⭐ **NEW**
+    1. [Introduction](attribute-based-filters.md#i-introduction)
+    2. [Available Attributes](attribute-based-filters.md#ii-available-attributes)
+    3. [Type Auto-Detection](attribute-based-filters.md#iii-type-auto-detection)
+    4. [Using Services Directly](attribute-based-filters.md#iv-using-the-services-directly)
+    5. [Extending AbstractAutoFilterType](attribute-based-filters.md#v-extending-abstractautofiltertype)
+    6. [Using with DTOs](attribute-based-filters.md#vi-using-with-dtos-data-transfer-objects)
+    7. [Comparison: Traditional vs Attribute-Based](attribute-based-filters.md#vii-comparison-traditional-vs-attribute-based)

@@ -48,3 +48,22 @@ services:
         public: true
         tags:
             - { name: kernel.event_listener, event: spiriit_filter.prepare, method: onFilterBuilderPrepare }
+
+    # Attribute-based filter services
+    Spiriit\Bundle\FormFilterBundle\Attribute\FilterableReader:
+        alias: spiriit_form_filter.filterable_reader
+        public: false
+
+    spiriit_form_filter.filterable_reader:
+        class: Spiriit\Bundle\FormFilterBundle\Attribute\FilterableReader
+        public: true
+
+    Spiriit\Bundle\FormFilterBundle\Attribute\AutoFilterTypeFactory:
+        alias: spiriit_form_filter.auto_filter_type_factory
+        public: false
+
+    spiriit_form_filter.auto_filter_type_factory:
+        class: Spiriit\Bundle\FormFilterBundle\Attribute\AutoFilterTypeFactory
+        public: true
+        arguments:
+            - '@spiriit_form_filter.filterable_reader'
