@@ -16,7 +16,7 @@ use Attribute;
 /**
  * Marks an entity or DTO class as having filterable properties.
  *
- * When placed on a class, the FilterReader will scan all properties
+ * When placed on a class, the FilterableReader will scan all properties
  * for #[Filter] attributes to automatically generate form filters.
  *
  * @author Spiriit <dev@spiriit.com>

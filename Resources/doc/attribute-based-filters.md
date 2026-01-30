@@ -1,4 +1,4 @@
-[8] Attribute-Based Filters (PHP 8+)
+[9] Attribute-Based Filters (PHP 8+)
 ====================================
 
 SpiriitFormFilterBundle provides a modern, attribute-based approach for defining filters that reduces boilerplate code and keeps filter configuration close to your domain models.
