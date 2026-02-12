@@ -11,37 +11,41 @@
 
 namespace Spiriit\Bundle\FormFilterBundle\Filter\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
 /**
  * Filter type for date range field.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-class DateTimeRangeFilterType extends AbstractType
+class DateTimeRangeFilterType extends AbstractRangeFilterType
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    protected function getLeftFieldType(): string
     {
-        $builder->add('left_datetime', DateTimeFilterType::class, $options['left_datetime_options']);
-        $builder->add('right_datetime', DateTimeFilterType::class, $options['right_datetime_options']);
-
-        $builder->setAttribute('filter_value_keys', ['left_datetime' => $options['left_datetime_options'], 'right_datetime' => $options['right_datetime_options']]);
+        return DateTimeFilterType::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver): void
+    protected function getRightFieldType(): string
     {
-        $resolver
-            ->setDefaults(['required' => false, 'left_datetime_options' => [], 'right_datetime_options' => [], 'data_extraction_method' => 'value_keys'])
-            ->setAllowedValues('data_extraction_method', ['value_keys'])
-        ;
+        return DateTimeFilterType::class;
+    }
+
+    protected function getLeftFieldName(): string
+    {
+        return 'left_datetime';
+    }
+
+    protected function getRightFieldName(): string
+    {
+        return 'right_datetime';
+    }
+
+    protected function getLeftOptionsKey(): string
+    {
+        return 'left_datetime_options';
+    }
+
+    protected function getRightOptionsKey(): string
+    {
+        return 'right_datetime_options';
     }
 
     public function getBlockPrefix(): string

@@ -46,11 +46,13 @@ abstract class ExpressionBuilder
     }
 
     /**
+     * @param mixed $expr
      * @param boolean $forceCaseInsensitivity
      * @param string|null $encoding
      */
-    public function __construct($forceCaseInsensitivity, $encoding = null)
+    public function __construct($expr, $forceCaseInsensitivity, $encoding = null)
     {
+        $this->expr = $expr;
         $this->forceCaseInsensitivity = $forceCaseInsensitivity;
         $this->encoding = $encoding;
     }
