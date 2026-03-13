@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -24,42 +26,30 @@ interface ConditionNodeInterface
      *
      * @return static
      */
-    public function orX();
+    public function orX(): static;
 
     /**
      * Start a AND sub expression.
      *
      * @return static
      */
-    public function andX();
+    public function andX(): static;
 
     /**
      * Returns the parent node.
-     *
-     * @return ConditionNode
      */
-    public function end();
+    public function end(): ?self;
 
     /**
      * Add a field in the current expression.
      *
-     * @param string $name
      * @return $this
      */
-    public function field($name);
+    public function field(string $name): static;
 
-    /**
-     * @return string
-     */
-    public function getOperator();
+    public function getOperator(): string;
 
-    /**
-     * @return array
-     */
-    public function getFields();
+    public function getFields(): array;
 
-    /**
-     * @return array
-     */
-    public function getChildren();
+    public function getChildren(): array;
 }

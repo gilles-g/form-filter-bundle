@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -22,17 +24,12 @@ use Symfony\Component\Form\FormInterface;
 interface DataExtractionMethodInterface
 {
     /**
-     * Returns the extration method name.
-     *
-     * @return string
+     * Returns the extraction method name.
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Extract data from a form.
-     *
-     *
-     * @return array
      */
-    public function extract(FormInterface $form);
+    public function extract(FormInterface $form): array;
 }

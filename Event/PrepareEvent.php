@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -21,29 +23,22 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class PrepareEvent extends Event
 {
-    /**
-     * @var object $queryBuilder
-     */
-    private $queryBuilder;
+    private object $queryBuilder;
 
     private ?QueryInterface $filterQuery = null;
 
     /**
      * Construct
-     *
-     * @param object $queryBuilder
      */
-    public function __construct($queryBuilder)
+    public function __construct(object $queryBuilder)
     {
         $this->queryBuilder = $queryBuilder;
     }
 
     /**
      * Get query builder
-     *
-     * @return object
      */
-    public function getQueryBuilder()
+    public function getQueryBuilder(): object
     {
         return $this->queryBuilder;
     }

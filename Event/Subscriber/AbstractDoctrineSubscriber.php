@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -256,11 +258,7 @@ abstract class AbstractDoctrineSubscriber
         }
     }
 
-    /**
-     * @param string $field
-     * @return string
-     */
-    protected function generateParameterName($field)
+    protected function generateParameterName(string $field): string
     {
         return sprintf('p_%s', str_replace('.', '_', $field));
     }

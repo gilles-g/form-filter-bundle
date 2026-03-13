@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -25,7 +27,7 @@ class ConditionBuilder implements ConditionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function root($operator): ConditionNode
+    public function root(string $operator): ConditionNode
     {
         $operator = strtolower($operator);
 

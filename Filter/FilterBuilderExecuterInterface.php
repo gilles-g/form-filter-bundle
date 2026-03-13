@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -21,24 +23,12 @@ interface FilterBuilderExecuterInterface
 {
     /**
      * Add a join.
-     *
-     * @param string   $join
-     * @param string   $alias
      */
-    public function addOnce($join, $alias, ?Closure $callback = null);
+    public function addOnce(string $join, string $alias, ?Closure $callback = null): mixed;
 
-    /**
-     * @return string
-     */
-    public function getAlias();
+    public function getAlias(): ?string;
 
-    /**
-     * @return RelationsAliasBag
-     */
-    public function getParts();
+    public function getParts(): RelationsAliasBag;
 
-    /**
-     * @return QueryInterface
-     */
-    public function getFilterQuery();
+    public function getFilterQuery(): QueryInterface;
 }

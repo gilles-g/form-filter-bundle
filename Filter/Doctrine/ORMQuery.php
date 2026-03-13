@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -29,11 +31,8 @@ class ORMQuery implements QueryInterface
 
     /**
      * Constructor.
-     *
-     * @param boolean      $forceCaseInsensitivity
-     * @param string|null  $encoding
      */
-    public function __construct(QueryBuilder $queryBuilder, $forceCaseInsensitivity = false, $encoding = null)
+    public function __construct(QueryBuilder $queryBuilder, bool $forceCaseInsensitivity = false, ?string $encoding = null)
     {
         $this->queryBuilder = $queryBuilder;
         $this->expressionBuilder = new ORMExpressionBuilder(
@@ -62,7 +61,7 @@ class ORMQuery implements QueryInterface
     /**
      * {@inheritDoc}
      */
-    public function createCondition($expression, array $parameters = []): Condition
+    public function createCondition(string|object $expression, array $parameters = []): Condition
     {
         return new Condition($expression, $parameters);
     }
@@ -78,7 +77,7 @@ class ORMQuery implements QueryInterface
     /**
      * {@inheritDoc}
      */
-    public function getRootAlias()
+    public function getRootAlias(): string
     {
         $aliases = $this->queryBuilder->getRootAliases();
 
@@ -88,7 +87,7 @@ class ORMQuery implements QueryInterface
     /**
      * {@inheritDoc}
      */
-    public function hasJoinAlias($joinAlias): bool
+    public function hasJoinAlias(string $joinAlias): bool
     {
         $joinParts = $this->queryBuilder->getDQLPart('join');
 
@@ -106,8 +105,6 @@ class ORMQuery implements QueryInterface
 
     /**
      * Get expr class.
-     *
-     * @return ExpressionBuilder
      */
     public function getExpressionBuilder(): ORMExpressionBuilder
     {

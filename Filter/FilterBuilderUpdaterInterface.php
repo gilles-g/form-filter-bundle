@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -17,9 +19,6 @@ interface FilterBuilderUpdaterInterface
 {
     /**
      * Build a filter query.
-     *
-     * @param  object $filterBuilder
-     * @param  string|null $alias
      */
-    public function addFilterConditions(FormInterface $form, $filterBuilder, $alias = null);
+    public function addFilterConditions(FormInterface $form, object $filterBuilder, ?string $alias = null): object;
 }

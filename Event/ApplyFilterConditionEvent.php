@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -21,17 +23,11 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class ApplyFilterConditionEvent extends Event
 {
-    /**
-     * @var mixed
-     */
-    private $queryBuilder;
+    private object $queryBuilder;
 
     private ConditionBuilderInterface $conditionBuilder;
 
-    /**
-     * @param mixed                     $queryBuilder
-     */
-    public function __construct($queryBuilder, ConditionBuilderInterface $conditionBuilder)
+    public function __construct(object $queryBuilder, ConditionBuilderInterface $conditionBuilder)
     {
         $this->queryBuilder = $queryBuilder;
         $this->conditionBuilder = $conditionBuilder;
@@ -42,10 +38,7 @@ class ApplyFilterConditionEvent extends Event
         return $this->conditionBuilder;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getQueryBuilder()
+    public function getQueryBuilder(): object
     {
         return $this->queryBuilder;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -18,10 +20,7 @@ namespace Spiriit\Bundle\FormFilterBundle\Filter\Condition;
  */
 class ConditionNode implements ConditionNodeInterface
 {
-    /**
-     * @var string
-     */
-    private $operator;
+    private string $operator;
 
     private ?ConditionNodeInterface $parent;
 
@@ -29,10 +28,7 @@ class ConditionNode implements ConditionNodeInterface
 
     private array $fields;
 
-    /**
-     * @param string                 $operator
-     */
-    public function __construct($operator, ?ConditionNodeInterface $parent = null)
+    public function __construct(string $operator, ?ConditionNodeInterface $parent = null)
     {
         $this->operator = $operator;
         $this->parent = $parent;
@@ -75,7 +71,7 @@ class ConditionNode implements ConditionNodeInterface
     /**
      * {@inheritDoc}
      */
-    public function field($name): static
+    public function field(string $name): static
     {
         $this->fields[$name] = null;
 
@@ -85,7 +81,7 @@ class ConditionNode implements ConditionNodeInterface
     /**
      * {@inheritDoc}
      */
-    public function getOperator()
+    public function getOperator(): string
     {
         return $this->operator;
     }
@@ -108,11 +104,8 @@ class ConditionNode implements ConditionNodeInterface
 
     /**
      * Set the condition for the given field name.
-     *
-     * @param string             $name
-     * @return bool
      */
-    public function setCondition($name, ConditionInterface $condition)
+    public function setCondition(string $name, ConditionInterface $condition): bool
     {
         if (array_key_exists($name, $this->fields)) {
             $this->fields[$name] = $condition;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -32,10 +34,7 @@ final class DoctrineApplyFilterListener
 
     private string $whereMethod;
 
-    /**
-     * @param string $whereMethod
-     */
-    public function __construct($whereMethod)
+    public function __construct(?string $whereMethod)
     {
         $this->whereMethod = empty($whereMethod) ? 'where' : sprintf('%sWhere', strtolower($whereMethod));
     }

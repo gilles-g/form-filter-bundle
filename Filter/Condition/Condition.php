@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -12,25 +14,17 @@
 namespace Spiriit\Bundle\FormFilterBundle\Filter\Condition;
 
 /**
- * Represent a filter condition to ba added on a query builder.
+ * Represent a filter condition to be added on a query builder.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
 class Condition implements ConditionInterface
 {
-    /**
-     * @var string
-     */
-    public $name;
+    public string $name = '';
+
+    private string|object $expression;
 
     /**
-     * @var string
-     */
-    private $expression;
-
-    /**
-     * @var array
-     *
      * array(
      *     'param_name_1' => $value,
      *     'param_nema_2  => array($value, $type),
@@ -38,10 +32,7 @@ class Condition implements ConditionInterface
      */
     private array $parameters;
 
-    /**
-     * @param string $expression
-     */
-    public function __construct($expression, array $parameters = [])
+    public function __construct(string|object $expression, array $parameters = [])
     {
         $this->expression = $expression;
         $this->parameters = $parameters;
@@ -50,7 +41,7 @@ class Condition implements ConditionInterface
     /**
      * {@inheritdoc}
      */
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -58,7 +49,7 @@ class Condition implements ConditionInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -66,7 +57,7 @@ class Condition implements ConditionInterface
     /**
      * {@inheritdoc}
      */
-    public function setExpression($expression): void
+    public function setExpression(string|object $expression): void
     {
         $this->expression = $expression;
     }
@@ -74,7 +65,7 @@ class Condition implements ConditionInterface
     /**
      * {@inheritdoc}
      */
-    public function getExpression()
+    public function getExpression(): string|object
     {
         return $this->expression;
     }

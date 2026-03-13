@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -55,7 +57,7 @@ class CollectionAdapterFilterType extends AbstractType
             $index = 0;
             $childOptions = array_replace(['property_path' => sprintf('[%d]', $index)], $options['entry_options']);
 
-            $form->add($index, $options['entry_type'], $childOptions);
+            $form->add((string) $index, $options['entry_type'], $childOptions);
         });
     }
 

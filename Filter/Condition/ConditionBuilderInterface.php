@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -18,21 +20,16 @@ interface ConditionBuilderInterface
 {
     /**
      * Create the root node.
-     *
-     * @param string $operator
-     * @return ConditionNodeInterface
      */
-    public function root($operator);
+    public function root(string $operator): ConditionNodeInterface;
 
     /**
      * Add a condition to a node.
      */
-    public function addCondition(ConditionInterface $condition);
+    public function addCondition(ConditionInterface $condition): void;
 
     /**
      * Returns the root node.
-     *
-     * @return ConditionNodeInterface
      */
-    public function getRoot();
+    public function getRoot(): ?ConditionNodeInterface;
 }

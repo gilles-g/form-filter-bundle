@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -21,22 +23,11 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
 {
     protected QueryInterface $filterQuery;
 
-    /**
-     * @var string
-     */
-    protected $alias;
+    protected ?string $alias;
 
-    /**
-     * @var array
-     */
     protected RelationsAliasBag $parts;
 
-    /**
-     * Construct.
-     *
-     * @param string            $alias
-     */
-    public function __construct(QueryInterface $filterQuery, $alias, RelationsAliasBag $parts)
+    public function __construct(QueryInterface $filterQuery, ?string $alias, RelationsAliasBag $parts)
     {
         $this->filterQuery = $filterQuery;
         $this->alias = $alias;
@@ -46,7 +37,7 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
     /**
      * {@inheritdoc}
      */
-    public function getAlias()
+    public function getAlias(): ?string
     {
         return $this->alias;
     }
@@ -70,7 +61,7 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
     /**
      * {@inheritdoc}
      */
-    public function addOnce($join, $alias, ?Closure $callback = null)
+    public function addOnce(string $join, string $alias, ?Closure $callback = null): mixed
     {
         if ($this->parts->has($join)) {
             return null;
@@ -79,7 +70,7 @@ class FilterBuilderExecuter implements FilterBuilderExecuterInterface
         $this->parts->add($join, $alias);
 
         if (!$callback instanceof Closure) {
-            return;
+            return null;
         }
 
         return $callback($this->filterQuery->getQueryBuilder(), $this->alias, $alias, $this->filterQuery->getExpr());

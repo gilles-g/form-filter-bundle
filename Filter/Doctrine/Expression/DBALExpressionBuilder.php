@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -15,10 +17,7 @@ use Doctrine\DBAL\Query\Expression\ExpressionBuilder as Expr;
 
 class DBALExpressionBuilder extends ExpressionBuilder
 {
-    /**
-     * Construct.
-     */
-    public function __construct(Expr $expr, $forceCaseInsensitivity, $encoding = null)
+    public function __construct(Expr $expr, bool $forceCaseInsensitivity, ?string $encoding = null)
     {
         $this->expr = $expr;
         parent::__construct($forceCaseInsensitivity, $encoding);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -20,34 +22,20 @@ interface QueryInterface
 {
     /**
      * Get query builder (of ORM, DBAL, ODM, Propel, etc.).
-     *
-     * @return mixed
      */
-    public function getQueryBuilder();
+    public function getQueryBuilder(): object;
 
     /**
      * Return a part name of filter events (ex: orm, dbal, propel, etc.).
-     *
-     * @return string
      */
-    public function getEventPartName();
+    public function getEventPartName(): string;
 
-    /**
-     * @param string $expression
-     * @return ConditionInterface
-     */
-    public function createCondition($expression, array $parameters = []);
+    public function createCondition(string|object $expression, array $parameters = []): ConditionInterface;
 
     /**
      * Get root alias.
-     *
-     * @return string
      */
-    public function getRootAlias();
+    public function getRootAlias(): string;
 
-    /**
-     * @param string $joinAlias
-     * @return bool
-     */
-    public function hasJoinAlias($joinAlias);
+    public function hasJoinAlias(string $joinAlias): bool;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -22,34 +24,21 @@ abstract class ExpressionBuilder
     public const SQL_DATE = 'Y-m-d';
     public const SQL_DATE_TIME = 'Y-m-d H:i:s';
 
-    /**
-     * @var mixed
-     */
-    protected $expr;
+    protected mixed $expr;
 
-    /**
-     * @var boolean
-     */
-    protected $forceCaseInsensitivity;
+    protected bool $forceCaseInsensitivity;
 
-    /**
-     * @var string
-     */
-    protected $encoding;
+    protected ?string $encoding;
 
     /**
      * Get expression object.
      */
-    public function expr()
+    public function expr(): mixed
     {
         return $this->expr;
     }
 
-    /**
-     * @param boolean $forceCaseInsensitivity
-     * @param string|null $encoding
-     */
-    public function __construct($forceCaseInsensitivity, $encoding = null)
+    public function __construct(bool $forceCaseInsensitivity, ?string $encoding = null)
     {
         $this->forceCaseInsensitivity = $forceCaseInsensitivity;
         $this->encoding = $encoding;
@@ -59,17 +48,11 @@ abstract class ExpressionBuilder
      * Returns between expression if min and max not null
      * Returns lte expression if max is null
      * Returns gte expression if min is null
-     *
-     * @param string $field field name
-     * @param number $min minimum value
-     * @param number $max maximum value
-     *
-     * @return Comparison|string
      */
-    public function inRange(string $field, $min, $max)
+    public function inRange(string $field, $min, $max): Comparison|string|null
     {
         if (!$min && !$max) {
-            return;
+            return null;
         }
         if (null === $min) {
             // $max exists
@@ -87,14 +70,8 @@ abstract class ExpressionBuilder
 
     /**
      * Creates BETWEEN() function with the given argument.
-     *
-     * @param string $field field name
-     * @param number $min minimum value
-     * @param number $max maximum value
-     *
-     * @return string
      */
-    public function between(string $field, $min, $max)
+    public function between(string $field, float|int $min, float|int $max): string
     {
         return $field . ' BETWEEN ' . $min . ' AND ' . $max;
     }
@@ -103,17 +80,11 @@ abstract class ExpressionBuilder
      * Returns between expression if min and max not null
      * Returns lte expression if max is null
      * Returns gte expression if min is null
-     *
-     * @param string        $field field name
-     * @param null|DateTime $min start date
-     * @param null|DateTime $max end date
-     *
-     * @return Comparison|string
      */
-    public function dateInRange($field, $min = null, $max = null)
+    public function dateInRange(string $field, ?DateTime $min = null, ?DateTime $max = null): mixed
     {
         if (!$min && !$max) {
-            return;
+            return null;
         }
 
         $min = $this->convertToSqlDate($min);
@@ -139,13 +110,8 @@ abstract class ExpressionBuilder
      * Returns between expression if min and max not null
      * Returns lte expression if max is null
      * Returns gte expression if min is null
-     *
-     * @param string|DateTime $value alias.fieldName or mysql date string format or DateTime
-     * @param string|DateTime $min alias.fieldName or mysql date string format or DateTime
-     * @param string|DateTime $max alias.fieldName or mysql date string format or DateTime
-     * @return Comparison|string
      */
-    public function dateTimeInRange($value, $min = null, $max = null)
+    public function dateTimeInRange(string|DateTime $value, string|DateTime|null $min = null, string|DateTime|null $max = null): mixed
     {
         if (!$min && !$max) {
             return null;
@@ -174,15 +140,9 @@ abstract class ExpressionBuilder
     }
 
     /**
-     * Get string like expression
-     *
-     * @param  string $field field name
-     * @param  string $value string value
-     * @param  int    $type one of FilterOperands::STRING_* constant
-     *
-     * @return Comparison|string
+     * Get string like expression.
      */
-    public function stringLike($field, $value, $type = FilterOperands::STRING_CONTAINS)
+    public function stringLike(string $field, string $value, int $type = FilterOperands::STRING_CONTAINS): mixed
     {
         $value = $this->convertTypeToMask($value, $type);
 
@@ -193,17 +153,12 @@ abstract class ExpressionBuilder
     }
 
     /**
-     * Normalize DateTime boundary
-     *
-     * @param DateTime $date
-     * @param  bool     $isMax
-     *
-     * @return Literal|string
+     * Normalize DateTime boundary.
      */
-    protected function convertToSqlDate($date, $isMax = false)
+    protected function convertToSqlDate(?DateTime $date, bool $isMax = false): mixed
     {
         if (!$date instanceof DateTime) {
-            return;
+            return null;
         }
 
         $copy = clone $date;
@@ -216,12 +171,9 @@ abstract class ExpressionBuilder
     }
 
     /**
-     * Normalize date time boundary
-     *
-     * @param DateTime|string $date
-     * @return Literal
+     * Normalize date time boundary.
      */
-    protected function convertToSqlDateTime($date)
+    protected function convertToSqlDateTime(DateTime|string|null $date): mixed
     {
         if ($date instanceof DateTime) {
             return $this->expr()->literal($date->format(self::SQL_DATE_TIME));
@@ -231,16 +183,11 @@ abstract class ExpressionBuilder
     }
 
     /**
-     * Prepare value for like operation
-     *
-     * @param string $value
-     * @param int    $type one of FilterOperands::STRING_*
-     *
-     * @return string
+     * Prepare value for like operation.
      *
      * @throws InvalidArgumentException
      */
-    protected function convertTypeToMask($value, $type)
+    protected function convertTypeToMask(string $value, int $type): string
     {
         if ($this->forceCaseInsensitivity) {
             $value = $this->encoding ? mb_strtolower($value, $this->encoding) : mb_strtolower($value);

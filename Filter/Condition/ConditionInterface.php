@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -18,41 +20,31 @@ interface ConditionInterface
 {
     /**
      * Set the name to map the condition on the ConditionBuilder instance.
-     *
-     * @param string $name
      */
-    public function setName($name);
+    public function setName(string $name): void;
 
     /**
      * Get condition path.
-     *
-     * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Set the condition expression.
-     *
-     * @param string $expression
      */
-    public function setExpression($expression);
+    public function setExpression(string|object $expression): void;
 
     /**
      * Get the condition expression.
-     *
-     * @return string
      */
-    public function getExpression();
+    public function getExpression(): string|object;
 
     /**
      * Set expression parameters.
      */
-    public function setParameters(array $parameters);
+    public function setParameters(array $parameters): void;
 
     /**
      * Get expression parameters.
-     *
-     * @return array
      */
-    public function getParameters();
+    public function getParameters(): array;
 }

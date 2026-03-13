@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -23,25 +25,13 @@ class GetFilterConditionEvent extends Event
 {
     private QueryInterface $filterQuery;
 
-    /**
-     * @var string $field
-     */
-    private $field;
+    private string $field;
 
-    /**
-     * @var array $values
-     */
-    private $values;
+    private array $values;
 
     private ?Condition $condition = null;
 
-    /**
-     * Construct.
-     *
-     * @param string         $field
-     * @param array          $values
-     */
-    public function __construct(QueryInterface $filterQuery, $field, $values)
+    public function __construct(QueryInterface $filterQuery, string $field, array $values)
     {
         $this->filterQuery = $filterQuery;
         $this->field = $field;
@@ -53,42 +43,27 @@ class GetFilterConditionEvent extends Event
         return $this->filterQuery;
     }
 
-    /**
-     * @return object
-     */
-    public function getQueryBuilder()
+    public function getQueryBuilder(): object
     {
         return $this->filterQuery->getQueryBuilder();
     }
 
-    /**
-     * @return string
-     */
-    public function getField()
+    public function getField(): string
     {
         return $this->field;
     }
 
-    /**
-     * @return array
-     */
-    public function getValues()
+    public function getValues(): array
     {
         return $this->values;
     }
 
-    /**
-     * @param string $expression
-     */
-    public function setCondition($expression, array $parameters = []): void
+    public function setCondition(string|object $expression, array $parameters = []): void
     {
         $this->condition = new Condition($expression, $parameters);
     }
 
-    /**
-     * @return ConditionInterface
-     */
-    public function getCondition(): ?Condition
+    public function getCondition(): ?ConditionInterface
     {
         return $this->condition;
     }

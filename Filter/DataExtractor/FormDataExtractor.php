@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -42,10 +44,10 @@ class FormDataExtractor implements FormDataExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function extractData(FormInterface $form, $methodName)
+    public function extractData(FormInterface $form, string $methodName): array
     {
         if (!isset($this->methods[$methodName])) {
-            throw new RuntimeException(sprintf('Unknown extraction method maned "%s".', $methodName));
+            throw new RuntimeException(sprintf('Unknown extraction method named "%s".', $methodName));
         }
 
         return $this->methods[$methodName]->extract($form);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -23,28 +25,17 @@ class RelationsAliasBag
         $this->aliases = $aliases;
     }
 
-    /**
-     * @param string $relation
-     * @return string
-     */
-    public function get($relation)
+    public function get(string $relation): string
     {
         return $this->aliases[$relation];
     }
 
-    /**
-     * @param string $relation
-     * @param string $alias
-     */
-    public function add($relation, $alias): void
+    public function add(string $relation, string $alias): void
     {
         $this->aliases[$relation] = $alias;
     }
 
-    /**
-     * @param string $relation
-     */
-    public function has($relation): bool
+    public function has(string $relation): bool
     {
         return isset($this->aliases[$relation]);
     }

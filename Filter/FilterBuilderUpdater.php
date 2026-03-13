@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -18,7 +20,6 @@ use Spiriit\Bundle\FormFilterBundle\Event\FilterEvents;
 use Spiriit\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
 use Spiriit\Bundle\FormFilterBundle\Event\PrepareEvent;
 use Spiriit\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilder;
-use Spiriit\Bundle\FormFilterBundle\Filter\Condition\ConditionBuilderInterface;
 use Spiriit\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
 use Spiriit\Bundle\FormFilterBundle\Filter\Condition\ConditionNodeInterface;
 use Spiriit\Bundle\FormFilterBundle\Filter\DataExtractor\FormDataExtractorInterface;
@@ -42,15 +43,9 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
     protected EventDispatcherInterface $dispatcher;
 
-    /**
-     * @var array
-     */
     protected RelationsAliasBag $parts;
 
-    /**
-     * @var ConditionBuilder
-     */
-    protected $conditionBuilder;
+    protected ?ConditionBuilder $conditionBuilder = null;
 
     /**
      * Constructor
@@ -73,13 +68,9 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     /**
      * Build a filter query.
      *
-     * @param  object        $queryBuilder
-     * @param  string|null   $alias
-     *
-     * @return object filter builder
      * @throws RuntimeException
      */
-    public function addFilterConditions(FormInterface $form, $queryBuilder, $alias = null)
+    public function addFilterConditions(FormInterface $form, object $queryBuilder, ?string $alias = null): object
     {
         // create the right QueryInterface object
         $event = new PrepareEvent($queryBuilder);
@@ -113,11 +104,9 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     /**
      * Add filter conditions on the condition node instance.
      *
-     * @param string         $alias
-     *
      * @throws RuntimeException
      */
-    protected function addFilters(FormInterface $form, QueryInterface $filterQuery, $alias = null)
+    protected function addFilters(FormInterface $form, QueryInterface $filterQuery, ?string $alias = null): void
     {
         /** @var $child FormInterface */
         foreach ($form->all() as $child) {
@@ -142,7 +131,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
                 $isCollection = ($formType instanceof CollectionAdapterFilterType);
 
-                $this->addFilters($isCollection ? $child->get(0) : $child, $filterQuery, $this->parts->get($join));
+                $this->addFilters($isCollection ? $child->get('0') : $child, $filterQuery, $this->parts->get($join));
 
                 // Doctrine2 embedded object case
             } elseif ($formType instanceof EmbeddedFilterTypeInterface) {
@@ -165,11 +154,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
     /**
      * Get the condition through event dispatcher.
-     *
-     * @param string         $alias
-     * @return ConditionInterface|null
      */
-    protected function getFilterCondition(FormInterface $form, AbstractType $formType, QueryInterface $filterQuery, $alias)
+    protected function getFilterCondition(FormInterface $form, AbstractType $formType, QueryInterface $filterQuery, ?string $alias): ?ConditionInterface
     {
         $values = $this->prepareFilterValues($form);
         $values += ['alias' => $alias];
@@ -227,11 +213,9 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     }
 
     /**
-     * Prepare all values needed to apply the filter
-     *
-     * @return array
+     * Prepare all values needed to apply the filter.
      */
-    protected function prepareFilterValues(FormInterface $form)
+    protected function prepareFilterValues(FormInterface $form): array
     {
         $config = $form->getConfig();
         $values = $this->dataExtractor->extractData($form, $config->getOption('data_extraction_method', 'default'));
@@ -244,9 +228,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
     }
 
     /**
-     * Get the conditon builder object for the given form.
-     *
-     * @return ConditionBuilderInterface
+     * Get the condition builder object for the given form.
      */
     protected function getConditionBuilder(Form $form): ConditionBuilder
     {
@@ -265,10 +247,8 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
 
     /**
      * Create a default node hierarchy by using AND operator.
-     *
-     * @param string                 $parentName
      */
-    protected function buildDefaultConditionNode(Form $form, ConditionNodeInterface $root, $parentName = '')
+    protected function buildDefaultConditionNode(Form $form, ConditionNodeInterface $root, string $parentName = ''): void
     {
         foreach ($form->all() as $child) {
             $formType = $child->getConfig()->getType()->getInnerType();
@@ -279,7 +259,7 @@ class FilterBuilderUpdater implements FilterBuilderUpdaterInterface
                 $isCollection = ($formType instanceof CollectionAdapterFilterType);
 
                 $this->buildDefaultConditionNode(
-                    $isCollection ? $child->get(0) : $child,
+                    $isCollection ? $child->get('0') : $child,
                     $root->andX(),
                     $name
                 );

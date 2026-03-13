@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the composer-write-changelogs project.
  *
@@ -35,10 +37,8 @@ final class FilterOperands
 
     /**
      * Returns all available number operands.
-     *
-     * @param boolean $includeSelector
      */
-    public static function getNumberOperands($includeSelector = false): array
+    public static function getNumberOperands(bool $includeSelector = false): array
     {
         $values = [self::OPERATOR_EQUAL, self::OPERATOR_GREATER_THAN, self::OPERATOR_GREATER_THAN_EQUAL, self::OPERATOR_LOWER_THAN, self::OPERATOR_LOWER_THAN_EQUAL];
 
@@ -51,10 +51,8 @@ final class FilterOperands
 
     /**
      * Returns all available string operands.
-     *
-     * @param boolean $includeSelector
      */
-    public static function getStringOperands($includeSelector = false): array
+    public static function getStringOperands(bool $includeSelector = false): array
     {
         $values = [self::STRING_STARTS, self::STRING_ENDS, self::STRING_EQUALS, self::STRING_CONTAINS];
 
@@ -74,7 +72,7 @@ final class FilterOperands
 
         $reflection = new ReflectionClass(self::class);
         foreach ($reflection->getConstants() as $name => $value) {
-            if ('OPERATOR_' === substr($name, 0, 9)) {
+            if (str_starts_with($name, 'OPERATOR_')) {
                 $choices[$value] = strtolower(str_replace('OPERATOR_', 'number.', $name));
             }
         }
@@ -91,7 +89,7 @@ final class FilterOperands
 
         $reflection = new ReflectionClass(self::class);
         foreach ($reflection->getConstants() as $name => $value) {
-            if ('STRING_' === substr($name, 0, 7)) {
+            if (str_starts_with($name, 'STRING_')) {
                 $choices[$value] = strtolower(str_replace('STRING_', 'text.', $name));
             }
         }
@@ -101,11 +99,8 @@ final class FilterOperands
 
     /**
      * Returns class constant string operand by given string.
-     *
-     * @param String $operand
-     * @return int
      */
-    public static function getStringOperandByString($operand)
+    public static function getStringOperandByString(?string $operand): int|false
     {
         if ($operand === null) {
             return self::STRING_STARTS;
